@@ -4,14 +4,14 @@ import { Wrapper } from './Splash.styles';
 import plane from 'assets/images/plane-2.png';
 import ContinueButton from 'components/ContinueButton/ContinueButton';
 import { useCtx } from 'context/Context';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Illustration from 'components/Illustration/Illustration';
 
 const Splash = () => {
     const { setStep } = useCtx();
 
     return (
-        <AnimatePresence>
+        <>
             <Wrapper onClick={() => setStep('PLANE')} as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <Title>
                     Throw and <br /> catch paper <br /> planes with <br /> people around <br /> the world
@@ -20,7 +20,7 @@ const Splash = () => {
                 <ContinueButton />
             </Wrapper>
             <Illustration />
-        </AnimatePresence>
+        </>
     );
 };
 

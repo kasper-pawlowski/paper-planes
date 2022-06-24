@@ -8,6 +8,8 @@ import { useMediaQuery } from 'react-responsive';
 import { Wrapper } from './Root.styles';
 import Splash from './Splash/Splash';
 import Plane from './Plane/Plane';
+import PlanesCountInfo from './PlanesCountInfo/PlanesCountInfo';
+import Home from './Home/Home';
 // import { QUERIES } from 'helpers/constants';
 
 const Root = () => {
@@ -23,12 +25,10 @@ const Root = () => {
                 return <Splash />;
             case 'PLANE':
                 return <Plane />;
-            case 'THROW_PLANE':
-                return <Splash />;
-            case 4:
-                return <DesktopInfo a />;
-            case 'THROW_PLAE':
-                return <Splash />;
+            case 'PLANES_COUNT_INFO':
+                return <PlanesCountInfo />;
+            case 'HOME':
+                return <Home />;
             default:
         }
     };

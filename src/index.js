@@ -1,11 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import Root from 'views/Root';
 import { CtxProvider } from 'context/Context';
 
-ReactDOM.render(
-    <CtxProvider>
-        <Root />
-    </CtxProvider>,
-    document.getElementById('root')
+createRoot(document.getElementById('root')).render(
+    <React.StrictMode>
+        <CtxProvider>
+            <Root />
+        </CtxProvider>
+    </React.StrictMode>
 );
