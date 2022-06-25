@@ -5,7 +5,6 @@ export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
 `;
 
 export const Button = styled.button`
@@ -16,7 +15,7 @@ export const Button = styled.button`
     width: fit-content;
     background-color: ${({ theme, secondary }) => (secondary ? 'transparent' : theme.colors.primary)};
     color: ${({ theme, secondary }) => (secondary ? theme.colors.primary : theme.colors.white)};
-    margin-top: ${({ secondary }) => secondary && 'auto'};
+    margin-top: ${({ secondary }) => (secondary ? 'auto' : '20px')};
 `;
 
 export const Img = styled.img`

@@ -1,31 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Title } from 'components/Title';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
-import { Button, CanvasWrapper, Info, Wrapper } from './Plane.styles';
+import { Button, CanvasWrapper, Info, Wrapper } from './NewPlane.styles';
 import Canvas from 'components/Canvas';
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
-import { storage, imagesRef, db } from '../../firebase';
+import { storage, db } from '../../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { addDoc, Timestamp, collection } from 'firebase/firestore';
 
-const Plane = () => {
+const NewPlane = () => {
     let image = uuidv4();
-    const { canvasRef, fileUrl, setFileUrl, setStep } = useCtx();
-    const [visitedBefore] = useState(window.localStorage.getItem('visited'));
+    const { canvasRef, setFileUrl, setStep, visitedBefore, user, planesCount } = useCtx();
+
     const imagesRef = ref(storage, `images/${image}`);
 
     const planesRef = collection(db, 'planes');
 
-    useEffect(() => {
-        window.localStorage.setItem('visited', '1');
-    }, [visitedBefore]);
+    const creationDate = () => {
+        const dt = new Date();
+        const day = dt.getDate();
+        const month = dt.toLocaleDateString('en', { month: 'long' });
+        const year = dt.getFullYear();
+        const date = `${month} ${day}, ${year}`;
+        return date;
+    };
 
     const createPlane = async (url) => {
         try {
             await addDoc(planesRef, {
                 canvas: url,
                 timestamp: Timestamp.now(),
+                owner: user,
+                fetchCount: 0,
+                creationDate: creationDate(),
+                number: planesCount + 1,
             });
         } catch (err) {
             alert(err);
@@ -68,4 +77,4 @@ const Plane = () => {
     );
 };
 
-export default Plane;
+export default NewPlane;

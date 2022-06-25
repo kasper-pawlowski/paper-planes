@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import IMG from 'assets/images/icon.jpg';
 import styled from 'styled-components';
 import { useCtx } from 'context/Context';
@@ -8,9 +8,20 @@ const StyledCanvas = styled.canvas`
     height: 100%;
 `;
 
-const Canvas = () => {
-    const { step, canvasRef } = useCtx();
+const Canvas = ({ prevImg }) => {
+    let prev_image = '';
+    prevImg && console.log(prevImg);
+    const { canvasRef } = useCtx();
     const contextRef = useRef(null);
+
+    prev_image = '';
+    const LoadPrevImg = () => {
+        prev_image = new Image();
+        prev_image.src = prevImg;
+        prev_image.onload = function () {
+            contextRef.current.drawImage(prev_image, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        };
+    };
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -21,7 +32,9 @@ const Canvas = () => {
         contextRef.current = ctx;
 
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, 100, 100);
+
+        prevImg && LoadPrevImg();
     });
 
     let base_image = '';

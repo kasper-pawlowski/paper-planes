@@ -8,11 +8,18 @@ import { motion } from 'framer-motion';
 import Illustration from 'components/Illustration/Illustration';
 
 const Splash = () => {
-    const { setStep } = useCtx();
+    const { setStep, visitedBefore } = useCtx();
 
     return (
         <>
-            <Wrapper onClick={() => setStep('PLANE')} as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <Wrapper
+                onClick={() => {
+                    visitedBefore ? setStep('HOME') : setStep('NEW_PLANE');
+                }}
+                as={motion.div}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}>
                 <Title>
                     Throw and <br /> catch paper <br /> planes with <br /> people around <br /> the world
                 </Title>
