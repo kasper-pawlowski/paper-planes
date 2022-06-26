@@ -13,8 +13,9 @@ export function CtxProvider({ children }) {
     const [visitedBefore] = useState(window.localStorage.getItem('visited'));
     const [user] = useState(window.localStorage.getItem('user'));
     const [planesCount, setPlanesCount] = useState();
+    const [loading, isLoading] = useState(false);
 
-    const value = { step, setStep, fileUrl, setFileUrl, canvasRef, visitedBefore, user, setPlanesCount, planesCount };
+    const value = { step, setStep, fileUrl, setFileUrl, canvasRef, visitedBefore, user, setPlanesCount, planesCount, loading, isLoading };
 
     return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

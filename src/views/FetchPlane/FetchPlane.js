@@ -7,20 +7,26 @@ import Canvas from 'components/Canvas';
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 import { db } from '../../firebase';
 import { v4 as uuidv4 } from 'uuid';
-import { collection, query, where, getDocs, QuerySnapshot } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { Stage, Layer, Rect, Text } from 'react-konva';
+import useMeasure from 'react-use-measure';
+import Konva from 'components/Konva';
 
 const FetchPlane = () => {
     const [plane, setPlane] = useState();
-    const { planesCount } = useCtx();
+    const { planesCount, loading } = useCtx();
+    const [ref, bounds] = useMeasure();
 
     const getRandomPlane = (min, max) => {
-        return Math.floor(Math.random() * (max - min + 1) + min);
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
     };
 
     useEffect(() => {
         let unsubscribed = false;
 
-        const q = query(collection(db, 'planes'), where('number', '==', getRandomPlane(1, planesCount)));
+        const q = query(collection(db, 'planes'), where('number', '==', getRandomPlane(1, planesCount + 1)));
 
         getDocs(q)
             .then((querySnapshot) => {
@@ -39,8 +45,10 @@ const FetchPlane = () => {
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Title center>Send paper plane</Title>
             <Info>Click to place stamp</Info>
-            <CanvasWrapper>
-                <Canvas prevImg={plane?.canvas} />
+            <CanvasWrapper ref={ref}>
+                {/* <Canvas prevImg={plane?.canvas} 
+                variant={'fetch'} /> */}
+                <Konva w={bounds.width} h={bounds.height} prevImg={plane?.canvas} />
             </CanvasWrapper>
             <Button>Throw plane</Button>
         </Wrapper>

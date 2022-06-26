@@ -17,10 +17,12 @@ export const Info = styled.p`
 `;
 
 export const CanvasWrapper = styled.div`
-    width: 100%;
-    height: 100%;
-    margin-bottom: 20px;
-    position: block;
+    width: 377px;
+    height: 541px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 `;
 
 export const Button = styled.button`
@@ -31,4 +33,5 @@ export const Button = styled.button`
     width: fit-content;
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
+    margin-top: auto;
 `;

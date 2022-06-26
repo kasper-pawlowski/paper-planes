@@ -1,25 +1,29 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import IMG from 'assets/images/icon.jpg';
 import styled from 'styled-components';
 import { useCtx } from 'context/Context';
 
 const StyledCanvas = styled.canvas`
-    width: 100%;
-    height: 100%;
+    width: 377px;
+    height: 541px;
 `;
 
-const Canvas = ({ prevImg }) => {
-    let prev_image = '';
+const Canvas = ({ prevImg, variant }) => {
+    const { canvasRef, isLoading, loading } = useCtx();
+    let prevCanvas;
+    let stample;
     prevImg && console.log(prevImg);
-    const { canvasRef } = useCtx();
     const contextRef = useRef(null);
 
-    prev_image = '';
+    const baza = (ctx, offsetX, offsetY) => {
+        return ctx.drawImage(stample, offsetX - 50, offsetY - 50, 100, 100);
+    };
+
     const LoadPrevImg = () => {
-        prev_image = new Image();
-        prev_image.src = prevImg;
-        prev_image.onload = function () {
-            contextRef.current.drawImage(prev_image, 0, 0, canvasRef.current.width, canvasRef.current.height);
+        prevCanvas = new Image();
+        prevCanvas.src = prevImg;
+        prevCanvas.onload = () => {
+            contextRef.current.drawImage(prevCanvas, 0, 0, canvasRef.current.width, canvasRef.current.height);
         };
     };
 
@@ -32,29 +36,29 @@ const Canvas = ({ prevImg }) => {
         contextRef.current = ctx;
 
         ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, 100, 100);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        prevImg && LoadPrevImg();
+        variant === 'fetch' && LoadPrevImg();
     });
 
-    let base_image = '';
-
-    function placeStample({ nativeEvent }) {
+    const placeStample = async ({ nativeEvent }) => {
         const ctx = contextRef.current;
         const canvas = canvasRef.current;
         const { offsetX, offsetY } = nativeEvent;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // ctx.fillStyle = '#FFFFFF';
+        // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        base_image = new Image();
-        base_image.src = IMG;
+        variant === 'fetch' && LoadPrevImg();
 
-        base_image.onload = function () {
-            ctx.drawImage(base_image, offsetX - 50, offsetY - 50, 100, 100);
+        stample = new Image();
+        stample.src = IMG;
+
+        stample.onload = () => {
+            ctx.drawImage(stample, offsetX - 50, offsetY - 50, 100, 100);
         };
-    }
+    };
 
     return <StyledCanvas ref={canvasRef} onClick={placeStample} />;
 };
