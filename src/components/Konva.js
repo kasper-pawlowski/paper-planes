@@ -23,7 +23,7 @@ const Konva = ({ w, h, prevImg }) => {
 
     let colors = ['red', 'green', 'blue', 'orange', 'yellow'];
 
-    return prevImg ? (
+    return (
         <Stage
             width={w}
             height={h}
@@ -46,8 +46,6 @@ const Konva = ({ w, h, prevImg }) => {
                 )}
             </Layer>
         </Stage>
-    ) : (
-        <p>loading</p>
     );
 };
 
