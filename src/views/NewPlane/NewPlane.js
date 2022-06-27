@@ -3,17 +3,22 @@ import { Title } from 'components/Title';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
 import { Button, CanvasWrapper, Info, Wrapper } from './NewPlane.styles';
-import Canvas from 'components/Canvas';
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
-import { storage, db } from '../../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import { addDoc, Timestamp, collection } from 'firebase/firestore';
+import Canvas from 'components/Canvas';
+import useMeasure from 'react-use-measure';
+import { db, storage } from '../../firebase';
 
 const NewPlane = () => {
     let image = uuidv4();
-    const { canvasRef, setFileUrl, setStep, visitedBefore, user, planesCount } = useCtx();
+    const { canvasRef, setFileUrl, setStep, visitedBefore, user, planesCount, konvaRef } = useCtx();
+    const [newPlaneRef, newPlaneBounds] = useMeasure();
 
     const imagesRef = ref(storage, `images/${image}`);
+
+    const imageRef = ref(storage);
+    console.log(imageRef);
 
     const planesRef = collection(db, 'planes');
 
@@ -35,6 +40,7 @@ const NewPlane = () => {
                 fetchCount: 0,
                 creationDate: creationDate(),
                 number: planesCount + 1,
+                name: image,
             });
         } catch (err) {
             alert(err);
@@ -42,8 +48,7 @@ const NewPlane = () => {
     };
 
     const saveCanvasToStorage = () => {
-        const dataURL = canvasRef.current.toDataURL('image/png');
-
+        const dataURL = konvaRef.current.toDataURL();
         function dataURLtoBlob(dataURL) {
             var arr = dataURL.split(','),
                 mime = arr[0].match(/:(.*?);/)[1],
@@ -55,22 +60,21 @@ const NewPlane = () => {
             }
             return new Blob([u8arr], { type: mime });
         }
-
         uploadBytes(imagesRef, dataURLtoBlob(dataURL)).then((e) => {
-            getDownloadURL(ref(storage, `images/${image}`)).then((url) => {
+            getDownloadURL(imagesRef).then((url) => {
                 setFileUrl(url);
                 createPlane(url);
-                setStep('PLANES_COUNT_INFO');
             });
         });
+        setStep('PLANES_COUNT_INFO');
     };
 
     return (
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Title center>{visitedBefore ? `Send plane` : `Send your first \n paper plane`}</Title>
             <Info>Click to place stamp</Info>
-            <CanvasWrapper>
-                <Canvas />
+            <CanvasWrapper ref={newPlaneRef}>
+                <Canvas width={newPlaneBounds.width} height={newPlaneBounds.height} variant="new" />
             </CanvasWrapper>
             <Button onClick={saveCanvasToStorage}>Throw your plane</Button>
         </Wrapper>

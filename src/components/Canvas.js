@@ -1,66 +1,48 @@
-import React, { useEffect, useRef, useState } from 'react';
-import IMG from 'assets/images/icon.jpg';
-import styled from 'styled-components';
+import React, { useState, useRef } from 'react';
+import { Stage, Layer, Rect, Image } from 'react-konva';
+import stample from 'assets/images/icon.jpg';
+import useImage from 'use-image';
 import { useCtx } from 'context/Context';
 
-const StyledCanvas = styled.canvas`
-    width: 377px;
-    height: 541px;
-`;
+const Canvas = ({ width, height, PrevCanvas, variant }) => {
+    const [position, setPosition] = useState();
+    const [dirty, IsDirty] = useState(false);
+    const [loading, isLoading] = useState(true);
+    const { konvaRef } = useCtx();
 
-const Canvas = ({ prevImg, variant }) => {
-    const { canvasRef, isLoading, loading } = useCtx();
-    let prevCanvas;
-    let stample;
-    prevImg && console.log(prevImg);
-    const contextRef = useRef(null);
-
-    const baza = (ctx, offsetX, offsetY) => {
-        return ctx.drawImage(stample, offsetX - 50, offsetY - 50, 100, 100);
-    };
-
-    const LoadPrevImg = () => {
-        prevCanvas = new Image();
-        prevCanvas.src = prevImg;
-        prevCanvas.onload = () => {
-            contextRef.current.drawImage(prevCanvas, 0, 0, canvasRef.current.width, canvasRef.current.height);
+    const handleClick = (e) => {
+        const pos = {
+            x: konvaRef.current.pointerPos.x - 50,
+            y: konvaRef.current.pointerPos.y - 50,
         };
+        setPosition(pos);
     };
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-
-        const ctx = canvas.getContext('2d');
-        contextRef.current = ctx;
-
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        variant === 'fetch' && LoadPrevImg();
-    });
-
-    const placeStample = async ({ nativeEvent }) => {
-        const ctx = contextRef.current;
-        const canvas = canvasRef.current;
-        const { offsetX, offsetY } = nativeEvent;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // ctx.fillStyle = '#FFFFFF';
-        // ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        variant === 'fetch' && LoadPrevImg();
-
-        stample = new Image();
-        stample.src = IMG;
-
-        stample.onload = () => {
-            ctx.drawImage(stample, offsetX - 50, offsetY - 50, 100, 100);
-        };
+    const PlaceStample = () => {
+        const [image] = useImage(stample);
+        return <Image image={image} x={position.x} y={position.y} width={100} height={100} />;
     };
 
-    return <StyledCanvas ref={canvasRef} onClick={placeStample} />;
+    return (
+        <Stage
+            width={width}
+            height={height}
+            ref={konvaRef}
+            onClick={() => {
+                handleClick();
+                IsDirty(true);
+            }}
+            onTap={() => {
+                handleClick();
+                IsDirty(true);
+            }}>
+            <Layer>
+                {variant === 'fetch' && <PrevCanvas />}
+                {variant === 'new' && <Rect width={window.innerWidth} height={window.innerHeight} fill="white" />}
+                {dirty && <PlaceStample />}
+            </Layer>
+        </Stage>
+    );
 };
 
 export default Canvas;
