@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Title } from 'components/Title';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
-import { Button, CanvasWrapper, Info, Wrapper } from './FetchPlane.styles';
+import { Button, CanvasWrapper, CreateNewPlaneButton, Info, NoPlanes, Wrapper } from './FetchPlane.styles';
 import { db, storage } from '../../firebase';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { Image } from 'react-konva';
@@ -88,10 +88,9 @@ const FetchPlane = () => {
             });
         });
         setStep('PLANES_COUNT_INFO');
-        // console.log(plane);
     };
 
-    return (
+    return plane ? (
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Title center>Send paper plane</Title>
             <Info>Click to place stamp</Info>
@@ -100,6 +99,12 @@ const FetchPlane = () => {
             </CanvasWrapper>
             <Button onClick={savePlane}>Throw plane</Button>
         </Wrapper>
+    ) : (
+        <NoPlanes>
+            <p>LOADING</p>
+            {/* <p>You haven't made any paper planes yet</p> */}
+            {/* <CreateNewPlaneButton onClick={() => setStep('NEW_PLANE')}>+ Create new plane</CreateNewPlaneButton> */}
+        </NoPlanes>
     );
 };
 

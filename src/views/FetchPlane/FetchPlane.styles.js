@@ -35,3 +35,35 @@ export const Button = styled.button`
     color: ${({ theme }) => theme.colors.white};
     margin-top: auto;
 `;
+
+export const NoPlanes = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 70px;
+    border: 2px solid ${({ theme }) => theme.colors.primary};
+    border-radius: 20px;
+    padding: 30px;
+    width: 100%;
+
+    p {
+        font-size: ${({ theme }) => theme.fontSizes.xl};
+        text-align: center;
+    }
+`;
+
+export const CreateNewPlaneButton = styled.button`
+    border-radius: 20px;
+    border: ${({ theme }) => `2px solid ${theme.colors.primary}`};
+    padding: 17px 14px;
+    font-size: ${({ theme }) => theme.fontSizes.m};
+    width: fit-content;
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
+    white-space: nowrap;
+    font-weight: 300;
+`;
