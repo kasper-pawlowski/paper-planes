@@ -17,11 +17,3 @@ export const Button = styled.button`
     color: ${({ theme, secondary }) => (secondary ? theme.colors.primary : theme.colors.white)};
     margin-top: ${({ secondary }) => (secondary ? 'auto' : '20px')};
 `;
-
-export const Img = styled.img`
-    position: absolute;
-    z-index: -1;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-`;

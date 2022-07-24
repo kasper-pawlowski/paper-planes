@@ -12,13 +12,10 @@ import { db, storage } from '../../firebase';
 
 const NewPlane = () => {
     let image = uuidv4();
-    const { canvasRef, setFileUrl, setStep, visitedBefore, user, planesCount, konvaRef } = useCtx();
+    const { setFileUrl, setStep, visitedBefore, user, planesCount, konvaRef } = useCtx();
     const [newPlaneRef, newPlaneBounds] = useMeasure();
 
     const imagesRef = ref(storage, `images/${image}`);
-
-    const imageRef = ref(storage);
-    console.log(imageRef);
 
     const planesRef = collection(db, 'planes');
 
@@ -48,7 +45,9 @@ const NewPlane = () => {
     };
 
     const saveCanvasToStorage = () => {
-        const dataURL = konvaRef.current.toDataURL();
+        const dataURL = konvaRef.current.toDataURL({
+            pixelRatio: 1,
+        });
         function dataURLtoBlob(dataURL) {
             var arr = dataURL.split(','),
                 mime = arr[0].match(/:(.*?);/)[1],
@@ -62,7 +61,7 @@ const NewPlane = () => {
         }
         uploadBytes(imagesRef, dataURLtoBlob(dataURL)).then((e) => {
             getDownloadURL(imagesRef).then((url) => {
-                setFileUrl(url);
+                // setFileUrl(url);
                 createPlane(url);
             });
         });

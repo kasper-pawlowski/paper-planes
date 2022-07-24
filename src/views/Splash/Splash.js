@@ -5,7 +5,7 @@ import plane from 'assets/images/plane-2.png';
 import ContinueButton from 'components/ContinueButton/ContinueButton';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
-import Illustration from 'components/Illustration/Illustration';
+import Illustration from 'components/Illustration';
 
 const Splash = () => {
     const { setStep, visitedBefore } = useCtx();
@@ -26,7 +26,7 @@ const Splash = () => {
                 <img src={plane} alt="" />
                 <ContinueButton />
             </Wrapper>
-            <Illustration />
+            <Illustration variant="bottom" />
         </>
     );
 };

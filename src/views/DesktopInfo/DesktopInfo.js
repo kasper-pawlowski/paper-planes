@@ -1,7 +1,7 @@
 import React from 'react';
 import { Info, Wrapper } from './DesktopInfo.styles';
 import { motion } from 'framer-motion';
-import Illustration from 'components/Illustration/Illustration';
+import Illustration from 'components/Illustration';
 
 const DesktopInfo = () => {
     return (
@@ -9,7 +9,7 @@ const DesktopInfo = () => {
             <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <Info>Join on your phone</Info>
             </Wrapper>
-            <Illustration />
+            <Illustration variant="bottom" />
         </>
     );
 };

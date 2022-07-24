@@ -1,9 +1,8 @@
-import Illustration from 'components/Illustration/Illustration';
+import Illustration from 'components/Illustration';
 import { Title } from 'components/Title';
 import React from 'react';
-import { Button, Wrapper, Img } from './Home.styles';
+import { Button, Wrapper } from './Home.styles';
 import { motion } from 'framer-motion';
-import frame1 from 'assets/images/frame1.png';
 import { useCtx } from 'context/Context';
 
 const Home = () => {
@@ -25,7 +24,7 @@ const Home = () => {
         <>
             <Wrapper onClick={() => setStep('FETCH_PLANE')} as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <Title
-                    center
+                    center="true"
                     as={motion.h1}
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -34,7 +33,7 @@ const Home = () => {
                     Touch screen to
                 </Title>
                 <Title
-                    center
+                    center="true"
                     as={motion.h1}
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -47,7 +46,7 @@ const Home = () => {
                 </Button>
                 <Button onClick={setStepToNewPlane}>+ Create new plane</Button>
             </Wrapper>
-            <Img src={frame1} alt="" />
+            <Illustration variant="center" />
         </>
     );
 };

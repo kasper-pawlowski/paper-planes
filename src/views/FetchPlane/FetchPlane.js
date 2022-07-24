@@ -84,10 +84,9 @@ const FetchPlane = () => {
             getDownloadURL(imageRef).then((url) => {
                 setFileUrl(url);
                 updatePlane(url);
-                console.log(url);
             });
         });
-        setStep('PLANES_COUNT_INFO');
+        planesCount && setStep('PLANES_COUNT_INFO');
     };
 
     return plane ? (
