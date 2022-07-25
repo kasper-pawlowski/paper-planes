@@ -10,14 +10,15 @@ import useMeasure from 'react-use-measure';
 import Canvas from 'components/Canvas';
 import useImage from 'use-image';
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
+import Loader from 'components/Loader/Loader';
 
 const FetchPlane = () => {
     const [plane, setPlane] = useState();
+    const [loading, setLoading] = useState(true);
     const { planesCount, konvaRef, setStep, setFileUrl } = useCtx();
     const [measureRef, bounds] = useMeasure();
 
     let planeRef;
-
     if (plane?.id) {
         planeRef = doc(db, 'planes', plane.id);
     }
@@ -43,6 +44,7 @@ const FetchPlane = () => {
                 if (unsubscribed) return;
                 const newPlane = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
                 setPlane(...newPlane);
+                setLoading(false);
             })
             .catch((err) => {
                 if (unsubscribed) return;
@@ -89,7 +91,14 @@ const FetchPlane = () => {
         planesCount && setStep('PLANES_COUNT_INFO');
     };
 
-    return plane ? (
+    return loading || !plane ? (
+        // <NoPlanes>
+        //     <p>LOADING</p>
+        //     {/* <p>You haven't made any paper planes yet</p> */}
+        //     {/* <CreateNewPlaneButton onClick={() => setStep('NEW_PLANE')}>+ Create new plane</CreateNewPlaneButton> */}
+        // </NoPlanes>
+        <Loader />
+    ) : (
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Title center>Send paper plane</Title>
             <Info>Click to place stamp</Info>
@@ -98,12 +107,6 @@ const FetchPlane = () => {
             </CanvasWrapper>
             <Button onClick={savePlane}>Throw plane</Button>
         </Wrapper>
-    ) : (
-        <NoPlanes>
-            <p>LOADING</p>
-            {/* <p>You haven't made any paper planes yet</p> */}
-            {/* <CreateNewPlaneButton onClick={() => setStep('NEW_PLANE')}>+ Create new plane</CreateNewPlaneButton> */}
-        </NoPlanes>
     );
 };
 

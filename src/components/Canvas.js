@@ -18,7 +18,7 @@ const Canvas = ({ width, height, PrevCanvas, variant }) => {
             const { country, state } = data;
             setLocation({
                 country: country.name,
-                isoCode: country.iso_code,
+                isoCode: country.iso_code, 
                 state: state.name,
             });
         });

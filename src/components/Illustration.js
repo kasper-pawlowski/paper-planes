@@ -15,7 +15,7 @@ export const StickBottom = styled(Illustration1)`
     z-index: -1;
 
     #earth {
-        animation: ${rotate} 50s infinite linear;
+        animation: ${rotate} 80s infinite linear;
         transform-box: fill-box;
         transform-origin: center center;
     }

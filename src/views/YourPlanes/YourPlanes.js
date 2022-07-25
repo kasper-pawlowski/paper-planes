@@ -19,9 +19,11 @@ import {
 } from './YourPlanes.styles';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '../../firebase';
+import Loader from 'components/Loader/Loader';
 
 const YourPlanes = () => {
     const [planes, setPlanes] = useState([]);
+    const [loading, setLoading] = useState(true);
     const { setStep, user } = useCtx();
 
     useEffect(() => {
@@ -34,6 +36,7 @@ const YourPlanes = () => {
                 if (unsubscribed) return;
                 const newPlanesDataArray = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
                 setPlanes(newPlanesDataArray);
+                setLoading(false);
             })
             .catch((err) => {
                 if (unsubscribed) return;
@@ -42,7 +45,9 @@ const YourPlanes = () => {
         return () => (unsubscribed = true);
     }, [user]);
 
-    return (
+    return loading ? (
+        <Loader />
+    ) : (
         <AnimatePresence>
             <Wrapper
                 as={motion.div}
@@ -50,7 +55,7 @@ const YourPlanes = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: '100vh' }}
                 transition={{ type: 'spring', stiffness: 100, duration: 0.15, damping: 15 }}>
-                {planes.length !== 0 ? (
+                {planes.length ? (
                     <>
                         <Title center>You've made {planes.length} planes</Title>
                         <Ul>
