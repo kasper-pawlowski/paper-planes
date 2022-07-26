@@ -4,56 +4,50 @@ import { useCtx } from 'context/Context';
 import stampSound from 'assets/rubber-stamp.mp3';
 import Stamp from 'components/Stamp';
 import axios from 'axios';
+import Loader from './Loader/Loader';
 
-const Canvas = ({ width, height, PrevCanvas, variant }) => {
+const Canvas = ({ width, height, variant, plane }) => {
     const api = 'https://api.geoapify.com/v1/ipinfo?&apiKey=cba9d4cd0da94613b2b4f45e939cde4a';
-    const [position, setPosition] = useState();
-    const [isClicked, setClicked] = useState(false);
-    const { konvaRef } = useCtx();
+    const [loading, setLoading] = useState(true);
+    const { konvaRef, PrevCanvas } = useCtx();
     const sound = new Audio(stampSound);
     const [location, setLocation] = useState();
+    const [stamp, setStamp] = useState();
 
     useEffect(() => {
         axios.get(api).then(({ data }) => {
             const { country, state } = data;
             setLocation({
                 country: country.name,
-                isoCode: country.iso_code, 
+                isoCode: country.iso_code,
                 state: state.name,
             });
         });
-    }, [setLocation]);
+        setLoading(false);
+    }, []);
 
     const handleClick = () => {
-        const pos = {
-            x: konvaRef.current.pointerPos.x,
-            y: konvaRef.current.pointerPos.y,
-        };
-        setPosition(pos);
-    };
-
-    const PlaceStamp = () => {
         sound.play();
-        return <Stamp position={position} location={location} />;
+        setStamp(<Stamp x={konvaRef.current.pointerPos.x} y={konvaRef.current.pointerPos.y} location={location} />);
     };
 
-    return (
+    return loading ? (
+        <Loader />
+    ) : (
         <Stage
             width={width}
             height={height}
             ref={konvaRef}
             onClick={() => {
                 handleClick();
-                setClicked(true);
             }}
             onTap={() => {
                 handleClick();
-                setClicked(true);
             }}>
             <Layer>
-                {variant === 'fetch' && <PrevCanvas />}
+                {variant === 'fetch' && <PrevCanvas plane={plane} />}
                 {variant === 'new' && <Rect width={window.innerWidth} height={window.innerHeight} fill="white" />}
-                {isClicked && <PlaceStamp />}
+                {stamp && stamp}
             </Layer>
         </Stage>
     );

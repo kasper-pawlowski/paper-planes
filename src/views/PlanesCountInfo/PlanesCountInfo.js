@@ -1,23 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Illustration from 'components/Illustration';
 import { Title } from 'components/Title';
 import { Wrapper } from './PlanesCountInfo.styles';
 import { motion } from 'framer-motion';
 import { useCtx } from 'context/Context';
+import Loader from 'components/Loader/Loader';
 
 const PlanesCountInfo = () => {
-    const { setStep, planesCount } = useCtx();
+    const { setStep, planesCount, planesCountInfoVariant } = useCtx();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(false);
         setTimeout(() => {
             setStep('HOME');
         }, 3000);
-    });
+    }, [setStep]);
 
-    return (
+    return loading ? (
+        <Loader />
+    ) : (
         <>
             <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <Title center>Your plane is now flying around the world with {planesCount - 1} others</Title>
+                <Title center>
+                    {planesCountInfoVariant === 'NEW'
+                        ? `Your plane is now flying around the world ${
+                              planesCount - 1 > 1 ? `with ${planesCount - 1} others` : planesCount - 1 === 1 ? `with ${planesCount - 1} other` : ''
+                          }`
+                        : planesCountInfoVariant === 'FETCHED'
+                        ? `The plane is back flying around the world ${
+                              planesCount - 1 > 1 ? `with ${planesCount - 1} others` : planesCount - 1 === 1 ? `with ${planesCount - 1} other` : ''
+                          }`
+                        : null}
+                </Title>
             </Wrapper>
             <Illustration variant="bottom" />
         </>

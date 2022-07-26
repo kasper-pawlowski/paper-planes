@@ -1,7 +1,7 @@
 import React from 'react';
 import { Rect, Group, Text, Circle, Star } from 'react-konva';
 
-const Stamp = ({ position, location }) => {
+const Stamp = ({ location, x, y }) => {
     const colors = ['#d11806', '#333333', '#2e9399', '#216e9c', '#fb7426'];
     let color = colors[Math.floor(Math.random() * colors.length)];
 
@@ -15,7 +15,7 @@ const Stamp = ({ position, location }) => {
     };
 
     const stamp1 = (
-        <Group x={position?.x} y={position?.y} width={130} height={130}>
+        <Group x={x} y={y} width={130} height={130}>
             <Circle height={130} stroke={color} strokeWidth={3} dash={[4, 5]} />
             <Circle height={110} stroke={color} strokeWidth={3} />
             <Text
@@ -76,7 +76,7 @@ const Stamp = ({ position, location }) => {
     );
 
     const stamp2 = (
-        <Group x={position?.x - 90} y={position?.y - 50}>
+        <Group x={x - 90} y={y - 50}>
             <Rect x={0} y={0} width={180} height={100} stroke={color} cornerRadius={100} />
             <Rect x={5} y={5} width={170} height={90} stroke={color} cornerRadius={100} />
             <Text
@@ -110,7 +110,7 @@ const Stamp = ({ position, location }) => {
     );
 
     const stamp3 = (
-        <Group x={position?.x - 65} y={position?.y - 65}>
+        <Group x={x - 65} y={y - 65}>
             <Rect x={0} y={0} width={130} height={130} stroke={color} cornerRadius={15} />
             <Rect x={5} y={5} width={120} height={120} stroke={color} cornerRadius={10} />
             <Text text={date()} fontSize={14} fill={color} y={15} width={130} height={130} verticalAlign="middle" align="center" fontFamily="Rubik" />

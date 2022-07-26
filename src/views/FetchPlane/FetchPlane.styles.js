@@ -1,4 +1,10 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+
+const rotate = keyframes`
+    0%{transform: rotate(0deg)};
+    0%{transform: rotate(-360deg)};
+`;
 
 export const Wrapper = styled.div`
     width: 100%;
@@ -30,7 +36,7 @@ export const Button = styled.button`
     border: none;
     padding: 20px;
     font-size: ${({ theme }) => theme.fontSizes.m};
-    width: fit-content;
+    width: 180px;
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
     margin-top: auto;
@@ -48,7 +54,7 @@ export const NoPlanes = styled.div`
     border: 2px solid ${({ theme }) => theme.colors.primary};
     border-radius: 20px;
     padding: 30px;
-    width: 100%;
+    width: calc(100% - 60px);
 
     p {
         font-size: ${({ theme }) => theme.fontSizes.xl};
@@ -66,4 +72,9 @@ export const CreateNewPlaneButton = styled.button`
     color: ${({ theme }) => theme.colors.white};
     white-space: nowrap;
     font-weight: 300;
+`;
+
+export const LoadingIcon = styled(AiOutlineLoading3Quarters)`
+    animation: ${rotate} 0.8s linear infinite;
+    font-size: 15px;
 `;

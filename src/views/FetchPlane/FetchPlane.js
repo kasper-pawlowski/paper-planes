@@ -2,26 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Title } from 'components/Title';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
-import { Button, CanvasWrapper, CreateNewPlaneButton, Info, NoPlanes, Wrapper } from './FetchPlane.styles';
+import { Button, CanvasWrapper, CreateNewPlaneButton, Info, NoPlanes, Wrapper, LoadingIcon } from './FetchPlane.styles';
 import { db, storage } from '../../firebase';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
-import { Image } from 'react-konva';
 import useMeasure from 'react-use-measure';
 import Canvas from 'components/Canvas';
-import useImage from 'use-image';
-import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import Loader from 'components/Loader/Loader';
 
 const FetchPlane = () => {
     const [plane, setPlane] = useState();
     const [loading, setLoading] = useState(true);
-    const { planesCount, konvaRef, setStep, setFileUrl } = useCtx();
+    const [busy, setBusy] = useState();
+    const { planesCount, konvaRef, setStep, setPlanesCountInfoVariant } = useCtx();
     const [measureRef, bounds] = useMeasure();
-
-    let planeRef;
-    if (plane?.id) {
-        planeRef = doc(db, 'planes', plane.id);
-    }
 
     let imageRef;
     if (plane?.name) {
@@ -53,16 +47,14 @@ const FetchPlane = () => {
         return () => (unsubscribed = true);
     }, [planesCount]);
 
-    const PrevCanvas = () => {
-        const [image] = useImage(plane?.canvas, 'Anonymous');
-        return <Image image={image} />;
-    };
-
     const updatePlane = async (url) => {
         try {
-            await updateDoc(planeRef, {
+            await updateDoc(doc(db, 'planes', plane.id), {
                 canvas: url,
                 fetchCount: plane?.fetchCount + 1,
+            }).then(() => {
+                setPlanesCountInfoVariant('FETCHED');
+                setStep('PLANES_COUNT_INFO');
             });
         } catch (err) {
             alert(err);
@@ -82,30 +74,48 @@ const FetchPlane = () => {
             }
             return new Blob([u8arr], { type: mime });
         }
-        uploadBytes(imageRef, dataURLtoBlob(dataURL)).then((e) => {
-            getDownloadURL(imageRef).then((url) => {
-                setFileUrl(url);
-                updatePlane(url);
-            });
-        });
-        planesCount && setStep('PLANES_COUNT_INFO');
+        const uploadTask = uploadBytesResumable(imageRef, dataURLtoBlob(dataURL));
+
+        uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+                let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                if (progress < 100) {
+                    setBusy(true);
+                } else {
+                    setBusy(false);
+                }
+            },
+            (error) => {
+                console.log(error);
+            },
+            () => {
+                getDownloadURL(imageRef).then((url) => {
+                    updatePlane(url);
+                });
+            }
+        );
     };
 
-    return loading || !plane ? (
-        // <NoPlanes>
-        //     <p>LOADING</p>
-        //     {/* <p>You haven't made any paper planes yet</p> */}
-        //     {/* <CreateNewPlaneButton onClick={() => setStep('NEW_PLANE')}>+ Create new plane</CreateNewPlaneButton> */}
-        // </NoPlanes>
+    return loading ? (
         <Loader />
-    ) : (
+    ) : plane ? (
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Title center>Send paper plane</Title>
             <Info>Click to place stamp</Info>
             <CanvasWrapper ref={measureRef}>
-                <Canvas width={bounds.width} height={bounds.height} PrevCanvas={PrevCanvas} variant="fetch" />
+                <Canvas width={bounds.width} height={bounds.height} plane={plane} variant="fetch" />
             </CanvasWrapper>
-            <Button onClick={savePlane}>Throw plane</Button>
+            <Button onClick={savePlane}>{busy ? <LoadingIcon /> : 'Throw plane'}</Button>
+        </Wrapper>
+    ) : (
+        <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <NoPlanes>
+                <p>
+                    No plane is flying yet <br /> {':('}
+                </p>
+                <CreateNewPlaneButton onClick={() => setStep('NEW_PLANE')}>+ Create new plane</CreateNewPlaneButton>
+            </NoPlanes>
         </Wrapper>
     );
 };
