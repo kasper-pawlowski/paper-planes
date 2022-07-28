@@ -88,11 +88,12 @@ const NewPlane = () => {
     return (
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Title center>{visitedBefore ? `Send plane` : `Send your first \n paper plane`}</Title>
-            <Info>Click to place stamp</Info>
-            <CanvasWrapper ref={newPlaneRef}>
-                <Canvas width={newPlaneBounds.width} height={newPlaneBounds.height} variant="new" />
-            </CanvasWrapper>
-            {/* <Button onClick={saveCanvasToStorage}>Throw your plane</Button> */}
+            <div>
+                <Info>Click to place stamp</Info>
+                <CanvasWrapper ref={newPlaneRef}>
+                    <Canvas width={newPlaneBounds.width} height={newPlaneBounds.height} variant="new" />
+                </CanvasWrapper>
+            </div>
             <Button onClick={saveCanvasToStorage}>{busy ? <LoadingIcon /> : 'Throw your plane'}</Button>
         </Wrapper>
     );

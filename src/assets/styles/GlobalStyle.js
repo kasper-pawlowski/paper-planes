@@ -13,7 +13,6 @@ export const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.colors.primary};
     height: 100%;
     background: linear-gradient(180deg, #71C3FF 0%, #E1F3FF 100%);
-
   }
   
   a, button, input, textarea {

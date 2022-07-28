@@ -13,18 +13,19 @@ export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
 `;
 
 export const Info = styled.p`
     font-weight: 600;
     font-size: ${({ theme }) => theme.fontSizes.m};
     text-align: center;
-    padding: 50px 0 10px;
+    padding-bottom: 10px;
 `;
 
 export const CanvasWrapper = styled.div`
-    width: 377px;
-    height: 541px;
+    width: 350px;
+    height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,7 +40,6 @@ export const Button = styled.button`
     width: 180px;
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
-    margin-top: auto;
 `;
 
 export const NoPlanes = styled.div`

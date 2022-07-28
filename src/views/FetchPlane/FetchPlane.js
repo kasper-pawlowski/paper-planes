@@ -102,10 +102,12 @@ const FetchPlane = () => {
     ) : plane ? (
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Title center>Send paper plane</Title>
-            <Info>Click to place stamp</Info>
-            <CanvasWrapper ref={measureRef}>
-                <Canvas width={bounds.width} height={bounds.height} plane={plane} variant="fetch" />
-            </CanvasWrapper>
+            <div>
+                <Info>Click to place stamp</Info>
+                <CanvasWrapper ref={measureRef}>
+                    <Canvas width={bounds.width} height={bounds.height} plane={plane} variant="fetch" />
+                </CanvasWrapper>
+            </div>
             <Button onClick={savePlane}>{busy ? <LoadingIcon /> : 'Throw plane'}</Button>
         </Wrapper>
     ) : (

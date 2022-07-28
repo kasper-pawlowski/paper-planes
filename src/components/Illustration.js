@@ -12,7 +12,7 @@ export const StickBottom = styled(Illustration1)`
     position: fixed;
     bottom: 0;
     height: 200px;
-    z-index: -1;
+    z-index: 0;
 
     #earth {
         animation: ${rotate} 80s infinite linear;
@@ -23,7 +23,7 @@ export const StickBottom = styled(Illustration1)`
 
 export const StickCenter = styled(Illustration2)`
     position: fixed;
-    z-index: -1;
+    z-index: 0;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

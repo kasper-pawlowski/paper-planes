@@ -20,9 +20,15 @@ const Home = () => {
         setStep('YOUR_PLANES');
     };
 
+    const setStepToFetchPlanes = (e) => {
+        if (!e) e = window.event;
+        e.stopPropagation();
+        setStep('FETCH_PLANE');
+    };
+
     return (
         <>
-            <Wrapper onClick={() => setStep('FETCH_PLANE')} as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <Wrapper onClick={setStepToFetchPlanes} as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <Title
                     center="true"
                     as={motion.h1}

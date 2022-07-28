@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from 'assets/styles/GlobalStyle';
 import { theme } from 'assets/styles/theme';
 import { useCtx } from 'context/Context';
-import DesktopInfo from './DesktopInfo/DesktopInfo';
+import { DesktopWrapper } from './DesktopWrapper/DesktopWrapper';
 import { useMediaQuery } from 'react-responsive';
 import { Wrapper } from './Root.styles';
 import Splash from './Splash/Splash';
@@ -25,7 +25,19 @@ const Root = () => {
         query: '(min-width: 1224px)',
     });
 
-    const renderSwitch = () => {
+    useEffect(() => {
+        window.localStorage.setItem('visited', '1');
+        !user && window.localStorage.setItem('user', uuidv4());
+    }, [user, visitedBefore]);
+
+    useEffect(() => {
+        const q = query(collection(db, 'planes'));
+        const unsub = onSnapshot(q, (querySnapshot) => {
+            setPlanesCount(querySnapshot.size);
+        });
+    }, [setPlanesCount]);
+
+    const RenderSwitch = () => {
         switch (step) {
             case 'SPLASH_SCREEN':
                 return <Splash />;
@@ -43,23 +55,24 @@ const Root = () => {
         }
     };
 
-    useEffect(() => {
-        window.localStorage.setItem('visited', '1');
-        !user && window.localStorage.setItem('user', uuidv4());
-    }, [user, visitedBefore]);
-
-    useEffect(() => {
-        const q = query(collection(db, 'planes'));
-        const unsub = onSnapshot(q, (querySnapshot) => {
-            setPlanesCount(querySnapshot.size);
-        });
-    }, [setPlanesCount]);
+    async function lockScreen() {
+        await document.body.requestFullscreen();
+        await window.screen.orientation.lock('portrait-primary');
+    }
 
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyle />
             <AnimatePresence>
-                <Wrapper>{isTabletAndUp ? <DesktopInfo /> : renderSwitch()}</Wrapper>
+                <Wrapper onClick={lockScreen}>
+                    {isTabletAndUp ? (
+                        <DesktopWrapper>
+                            <RenderSwitch />
+                        </DesktopWrapper>
+                    ) : (
+                        <RenderSwitch />
+                    )}
+                </Wrapper>
             </AnimatePresence>
         </ThemeProvider>
     );
