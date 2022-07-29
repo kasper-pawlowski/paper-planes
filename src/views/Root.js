@@ -64,7 +64,7 @@ const Root = () => {
         <ThemeProvider theme={theme}>
             <GlobalStyle />
             <AnimatePresence>
-                <Wrapper onClick={lockScreen}>
+                <Wrapper onClick={!isTabletAndUp && lockScreen}>
                     {isTabletAndUp ? (
                         <DesktopWrapper>
                             <RenderSwitch />
