@@ -20,11 +20,13 @@ import {
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '../../firebase';
 import Loader from 'components/Loader/Loader';
+import { useNavigate } from 'react-router-dom';
 
 const YourPlanes = () => {
     const [planes, setPlanes] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { setStep, user } = useCtx();
+    const { user } = useCtx();
+    const navigate = useNavigate();
 
     useEffect(() => {
         let unsubscribed = false;
@@ -77,12 +79,12 @@ const YourPlanes = () => {
                 ) : (
                     <NoPlanes>
                         <p>You haven't made any paper planes yet</p>
-                        <CreateNewPlaneButton onClick={() => setStep('NEW_PLANE')}>+ Create new plane</CreateNewPlaneButton>
+                        <CreateNewPlaneButton to="/new-plane">+ Create new plane</CreateNewPlaneButton>
                     </NoPlanes>
                 )}
 
                 <Button
-                    onClick={() => setStep('HOME')}
+                    onClick={() => navigate(-1)}
                     as={motion.button}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

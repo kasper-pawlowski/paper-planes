@@ -3,32 +3,26 @@ import { Title } from 'components/Title';
 import React from 'react';
 import { Button, Wrapper } from './Home.styles';
 import { motion } from 'framer-motion';
-import { useCtx } from 'context/Context';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
-    const { setStep } = useCtx();
+    const navigate = useNavigate();
 
     const setStepToNewPlane = (e) => {
         if (!e) e = window.event;
         e.stopPropagation();
-        setStep('NEW_PLANE');
+        navigate('/new-plane');
     };
 
     const setStepToYourPlanes = (e) => {
         if (!e) e = window.event;
         e.stopPropagation();
-        setStep('YOUR_PLANES');
-    };
-
-    const setStepToFetchPlanes = (e) => {
-        if (!e) e = window.event;
-        e.stopPropagation();
-        setStep('FETCH_PLANE');
+        navigate('/your-planes');
     };
 
     return (
         <>
-            <Wrapper onClick={setStepToFetchPlanes} as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <Wrapper onClick={() => navigate('/fetch-plane')} as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <Title
                     center="true"
                     as={motion.h1}
@@ -50,7 +44,7 @@ const Home = () => {
                 <Button onClick={setStepToYourPlanes} secondary>
                     See your planes
                 </Button>
-                <Button onClick={setStepToNewPlane}>+ Create new plane</Button>
+                <Button onClick={setStepToNewPlane}> + Create new plane</Button>
             </Wrapper>
             <Illustration variant="center" />
         </>

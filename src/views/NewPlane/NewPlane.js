@@ -1,22 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Title } from 'components/Title';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
-import { Button, CanvasWrapper, Info, Wrapper, LoadingIcon } from './NewPlane.styles';
+import { Button, CanvasWrapper, Info, Wrapper, LoadingIcon, BackLink, ButtonsWrapper, BackIcon } from './NewPlane.styles';
 import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { addDoc, Timestamp, collection } from 'firebase/firestore';
 import Canvas from 'components/Canvas';
 import useMeasure from 'react-use-measure';
 import { db, storage } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
+import Illustration from 'components/Illustration';
 
 const NewPlane = () => {
     let image = uuidv4();
-    const { setStep, visitedBefore, user, planesCount, konvaRef, setPlanesCountInfoVariant } = useCtx();
+    const { visitedBefore, user, planesCount, konvaRef } = useCtx();
     const [newPlaneRef, newPlaneBounds] = useMeasure();
     const [busy, setBusy] = useState();
+    const [infoScreen, setInfoScreen] = useState(false);
+    const navigate = useNavigate();
 
     const imagesRef = ref(storage, `images/${image}`);
+
+    useEffect(() => {
+        if (infoScreen) {
+            setTimeout(() => {
+                navigate('/');
+                setInfoScreen(false);
+            }, 3000);
+        }
+    }, [infoScreen, navigate]);
 
     const creationDate = () => {
         const dt = new Date();
@@ -38,8 +51,7 @@ const NewPlane = () => {
                 number: planesCount + 1,
                 name: image,
             }).then(() => {
-                setPlanesCountInfoVariant('NEW');
-                setStep('PLANES_COUNT_INFO');
+                setInfoScreen(true);
             });
         } catch (err) {
             alert(err);
@@ -85,7 +97,18 @@ const NewPlane = () => {
         );
     };
 
-    return (
+    return infoScreen ? (
+        <>
+            <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <Title center>
+                    {`Your plane is now flying around the world ${
+                        planesCount - 1 > 1 ? `with ${planesCount - 1} others` : planesCount - 1 === 1 ? `with ${planesCount - 1} other` : ''
+                    }`}
+                </Title>
+            </Wrapper>
+            <Illustration variant="bottom" />
+        </>
+    ) : (
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Title center>{visitedBefore ? `Send plane` : `Send your first \n paper plane`}</Title>
             <div>
@@ -94,7 +117,12 @@ const NewPlane = () => {
                     <Canvas width={newPlaneBounds.width} height={newPlaneBounds.height} variant="new" />
                 </CanvasWrapper>
             </div>
-            <Button onClick={saveCanvasToStorage}>{busy ? <LoadingIcon /> : 'Throw your plane'}</Button>
+            <ButtonsWrapper>
+                <BackLink to="/">
+                    <BackIcon />
+                </BackLink>
+                <Button onClick={saveCanvasToStorage}>{busy ? <LoadingIcon /> : 'Throw your plane'}</Button>
+            </ButtonsWrapper>
         </Wrapper>
     );
 };

@@ -8,18 +8,17 @@ import { useMediaQuery } from 'react-responsive';
 import { Wrapper } from './Root.styles';
 import Splash from './Splash/Splash';
 import NewPlane from './NewPlane/NewPlane';
-import PlanesCountInfo from './PlanesCountInfo/PlanesCountInfo';
 import Home from './Home/Home';
-// import { QUERIES } from 'helpers/constants';
 import { AnimatePresence } from 'framer-motion';
 import { v4 as uuidv4 } from 'uuid';
 import FetchPlane from './FetchPlane/FetchPlane';
 import YourPlanes from './YourPlanes/YourPlanes';
 import { db } from '../firebase';
 import { collection, query, onSnapshot } from 'firebase/firestore';
+import { Routes, Route } from 'react-router-dom';
 
 const Root = () => {
-    const { step, visitedBefore, setPlanesCount, user } = useCtx();
+    const { visitedBefore, setPlanesCount, user } = useCtx();
 
     const isTabletAndUp = useMediaQuery({
         query: '(min-width: 1224px)',
@@ -37,40 +36,36 @@ const Root = () => {
         });
     }, [setPlanesCount]);
 
-    const RenderSwitch = () => {
-        switch (step) {
-            case 'SPLASH_SCREEN':
-                return <Splash />;
-            case 'HOME':
-                return <Home />;
-            case 'NEW_PLANE':
-                return <NewPlane />;
-            case 'FETCH_PLANE':
-                return <FetchPlane />;
-            case 'PLANES_COUNT_INFO':
-                return <PlanesCountInfo />;
-            case 'YOUR_PLANES':
-                return <YourPlanes />;
-            default:
-        }
-    };
-
-    async function lockScreen() {
+    const lockScreen = async () => {
         await document.body.requestFullscreen();
         await window.screen.orientation.lock('portrait-primary');
-    }
+    };
 
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyle />
             <AnimatePresence>
-                <Wrapper onClick={!isTabletAndUp && lockScreen}>
+                <Wrapper onClick={!isTabletAndUp ? lockScreen : undefined}>
                     {isTabletAndUp ? (
                         <DesktopWrapper>
-                            <RenderSwitch />
+                            <Routes>
+                                <Route path="/splash" element={<Splash />} />
+                                <Route path="/" element={<Home />} />
+                                <Route path="/new-plane" element={<NewPlane />} />
+                                <Route path="/fetch-plane" element={<FetchPlane />} />
+
+                                <Route path="/your-planes" element={<YourPlanes />} />
+                            </Routes>
                         </DesktopWrapper>
                     ) : (
-                        <RenderSwitch />
+                        <Routes>
+                            <Route path="/splash" element={<Splash />} />
+                            <Route path="/" element={<Home />} />
+                            <Route path="/new-plane" element={<NewPlane />} />
+                            <Route path="/fetch-plane" element={<FetchPlane />} />
+
+                            <Route path="/your-planes" element={<YourPlanes />} />
+                        </Routes>
                     )}
                 </Wrapper>
             </AnimatePresence>

@@ -1,5 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
+import { TbArrowBackUp } from 'react-icons/tb';
+import { Link } from 'react-router-dom';
 
 const rotate = keyframes`
     0%{transform: rotate(0deg)};
@@ -32,12 +34,34 @@ export const CanvasWrapper = styled.div`
     overflow: hidden;
 `;
 
+export const ButtonsWrapper = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+`;
+
+export const BackLink = styled(Link)`
+    height: 60px;
+    width: 60px;
+    border-radius: 20px;
+    border: 2px solid ${({ theme }) => theme.colors.primary};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: ${({ theme }) => theme.fontSizes.l};
+    background-color: transparent;
+`;
+
+export const BackIcon = styled(TbArrowBackUp)``;
+
 export const Button = styled.button`
     border-radius: 20px;
     border: none;
-    padding: 20px;
     font-size: ${({ theme }) => theme.fontSizes.m};
-    width: 180px;
+    flex: 1;
+    height: 60px;
     background-color: ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.white};
 `;
@@ -62,7 +86,7 @@ export const NoPlanes = styled.div`
     }
 `;
 
-export const CreateNewPlaneButton = styled.button`
+export const CreateNewPlaneButton = styled(Link)`
     border-radius: 20px;
     border: ${({ theme }) => `2px solid ${theme.colors.primary}`};
     padding: 17px 14px;

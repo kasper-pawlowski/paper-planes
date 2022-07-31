@@ -9,13 +9,11 @@ export function useCtx() {
 }
 
 export function CtxProvider({ children }) {
-    const [step, setStep] = useState('SPLASH_SCREEN');
     const canvasRef = useRef(null);
     const konvaRef = useRef();
     const [visitedBefore] = useState(window.localStorage.getItem('visited'));
     const [user] = useState(window.localStorage.getItem('user'));
     const [planesCount, setPlanesCount] = useState();
-    const [planesCountInfoVariant, setPlanesCountInfoVariant] = useState();
 
     const PrevCanvas = ({ plane }) => {
         const [image] = useImage(plane?.canvas, 'Anonymous');
@@ -23,16 +21,12 @@ export function CtxProvider({ children }) {
     };
 
     const value = {
-        step,
-        setStep,
         canvasRef,
         visitedBefore,
         user,
         setPlanesCount,
         planesCount,
         konvaRef,
-        planesCountInfoVariant,
-        setPlanesCountInfoVariant,
         PrevCanvas,
     };
 

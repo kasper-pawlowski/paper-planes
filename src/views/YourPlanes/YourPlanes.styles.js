@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { RiCloseLine, RiUserLocationFill } from 'react-icons/ri';
 import { FaPaperPlane } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 export const Wrapper = styled.div`
     width: 100%;
@@ -103,7 +104,7 @@ export const NoPlanes = styled.div`
     }
 `;
 
-export const CreateNewPlaneButton = styled.button`
+export const CreateNewPlaneButton = styled(Link)`
     border-radius: 20px;
     border: ${({ theme }) => `2px solid ${theme.colors.primary}`};
     padding: 17px 14px;

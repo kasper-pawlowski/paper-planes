@@ -6,15 +6,17 @@ import ContinueButton from 'components/ContinueButton/ContinueButton';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
 import Illustration from 'components/Illustration';
+import { useNavigate } from 'react-router-dom';
 
 const Splash = () => {
-    const { setStep, visitedBefore } = useCtx();
+    const { visitedBefore } = useCtx();
+    const navigate = useNavigate();
 
     return (
         <>
             <Wrapper
                 onClick={() => {
-                    visitedBefore ? setStep('HOME') : setStep('NEW_PLANE');
+                    visitedBefore ? navigate('/') : navigate('/new-plane');
                 }}
                 as={motion.div}
                 initial={{ opacity: 0 }}
