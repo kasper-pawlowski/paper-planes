@@ -2,18 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Title } from 'components/Title';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
-import {
-    Button,
-    CanvasWrapper,
-    CreateNewPlaneButton,
-    Info,
-    NoPlanes,
-    Wrapper,
-    LoadingIcon,
-    ButtonsWrapper,
-    BackIcon,
-    BackLink,
-} from './FetchPlane.styles';
+import { Button, CanvasWrapper, CreateNewPlaneButton, Info, NoPlanes, Wrapper, LoadingIcon, ButtonsWrapper, BackLink } from './FetchPlane.styles';
 import { db, storage } from '../../firebase';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import useMeasure from 'react-use-measure';
@@ -22,6 +11,7 @@ import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import Loader from 'components/Loader/Loader';
 import { useNavigate } from 'react-router-dom';
 import Illustration from 'components/Illustration';
+import { TbArrowBackUp } from 'react-icons/tb';
 
 const FetchPlane = () => {
     const [plane, setPlane] = useState();
@@ -31,6 +21,10 @@ const FetchPlane = () => {
     const [measureRef, bounds] = useMeasure();
     const [infoScreen, setInfoScreen] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log(infoScreen);
+    }, [infoScreen]);
 
     useEffect(() => {
         if (infoScreen) {
@@ -145,7 +139,7 @@ const FetchPlane = () => {
                 </div>
                 <ButtonsWrapper>
                     <BackLink to="/">
-                        <BackIcon />
+                        <TbArrowBackUp />
                     </BackLink>
                     <Button onClick={savePlane}>{busy ? <LoadingIcon /> : 'Throw plane'}</Button>
                 </ButtonsWrapper>

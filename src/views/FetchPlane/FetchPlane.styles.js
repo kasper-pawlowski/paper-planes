@@ -1,6 +1,5 @@
 import styled, { keyframes } from 'styled-components';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import { TbArrowBackUp } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 
 const rotate = keyframes`
@@ -53,8 +52,6 @@ export const BackLink = styled(Link)`
     font-size: ${({ theme }) => theme.fontSizes.l};
     background-color: transparent;
 `;
-
-export const BackIcon = styled(TbArrowBackUp)``;
 
 export const Button = styled.button`
     border-radius: 20px;

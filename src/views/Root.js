@@ -16,6 +16,7 @@ import YourPlanes from './YourPlanes/YourPlanes';
 import { db } from '../firebase';
 import { collection, query, onSnapshot } from 'firebase/firestore';
 import { Routes, Route } from 'react-router-dom';
+import YourPlane from './YourPlane/YourPlane';
 
 const Root = () => {
     const { visitedBefore, setPlanesCount, user } = useCtx();
@@ -41,6 +42,17 @@ const Root = () => {
         await window.screen.orientation.lock('portrait-primary');
     };
 
+    const AppRoutes = () => (
+        <Routes>
+            <Route path="/splash" element={<Splash />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/new-plane" element={<NewPlane />} />
+            <Route path="/fetch-plane" element={<FetchPlane />} />
+            <Route path="/your-planes" element={<YourPlanes />} />
+            <Route path="/your-planes/:id" element={<YourPlane />} />
+        </Routes>
+    );
+
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyle />
@@ -48,24 +60,10 @@ const Root = () => {
                 <Wrapper onClick={!isTabletAndUp ? lockScreen : undefined}>
                     {isTabletAndUp ? (
                         <DesktopWrapper>
-                            <Routes>
-                                <Route path="/splash" element={<Splash />} />
-                                <Route path="/" element={<Home />} />
-                                <Route path="/new-plane" element={<NewPlane />} />
-                                <Route path="/fetch-plane" element={<FetchPlane />} />
-
-                                <Route path="/your-planes" element={<YourPlanes />} />
-                            </Routes>
+                            <AppRoutes />
                         </DesktopWrapper>
                     ) : (
-                        <Routes>
-                            <Route path="/splash" element={<Splash />} />
-                            <Route path="/" element={<Home />} />
-                            <Route path="/new-plane" element={<NewPlane />} />
-                            <Route path="/fetch-plane" element={<FetchPlane />} />
-
-                            <Route path="/your-planes" element={<YourPlanes />} />
-                        </Routes>
+                        <AppRoutes />
                     )}
                 </Wrapper>
             </AnimatePresence>

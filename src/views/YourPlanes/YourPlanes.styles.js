@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { RiCloseLine, RiUserLocationFill } from 'react-icons/ri';
+import { RiUserLocationFill } from 'react-icons/ri';
 import { FaPaperPlane } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
@@ -24,9 +24,17 @@ export const Button = styled.button`
     justify-content: center;
 `;
 
-export const StyledRiCloseLine = styled(RiCloseLine)`
-    font-size: ${({ theme }) => theme.fontSizes.xl};
-    color: ${({ theme }) => theme.colors.white};
+export const BackButton = styled.button`
+    margin-top: auto;
+    height: 60px;
+    width: 60px;
+    border-radius: 20px;
+    border: 2px solid ${({ theme }) => theme.colors.primary};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: ${({ theme }) => theme.fontSizes.l};
+    background-color: transparent;
 `;
 
 export const Ul = styled.ul`
@@ -38,7 +46,7 @@ export const Ul = styled.ul`
     flex-direction: column;
 `;
 
-export const Li = styled.li`
+export const Li = styled(Link)`
     display: flex;
     border-bottom: 1px solid #f5f5f570;
     display: flex;

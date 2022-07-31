@@ -3,7 +3,7 @@ import { Title } from 'components/Title';
 import { useCtx } from 'context/Context';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Button,
+    BackButton,
     CreateNewPlaneButton,
     Date,
     FetchCountWrapper,
@@ -12,7 +12,6 @@ import {
     Number,
     NumberAndDate,
     StyledFaPaperPlane,
-    StyledRiCloseLine,
     StyledRiUserLocationFill,
     Ul,
     Wrapper,
@@ -21,6 +20,7 @@ import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '../../firebase';
 import Loader from 'components/Loader/Loader';
 import { useNavigate } from 'react-router-dom';
+import { TbArrowBackUp } from 'react-icons/tb';
 
 const YourPlanes = () => {
     const [planes, setPlanes] = useState([]);
@@ -62,7 +62,7 @@ const YourPlanes = () => {
                         <Title center>You've made {planes.length} planes</Title>
                         <Ul>
                             {planes.map((plane) => (
-                                <Li key={plane.id}>
+                                <Li key={plane.id} to={`/your-planes/${plane.id}`}>
                                     <StyledFaPaperPlane />
                                     <NumberAndDate>
                                         <Number>#{plane.number}</Number>
@@ -83,15 +83,15 @@ const YourPlanes = () => {
                     </NoPlanes>
                 )}
 
-                <Button
+                <BackButton
                     onClick={() => navigate(-1)}
                     as={motion.button}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15, delay: 1 }}>
-                    <StyledRiCloseLine />
-                </Button>
+                    transition={{ duration: 0.15, delay: 0.7 }}>
+                    <TbArrowBackUp />
+                </BackButton>
             </Wrapper>
         </AnimatePresence>
     );

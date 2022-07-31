@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Title } from 'components/Title';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
-import { Button, CanvasWrapper, Info, Wrapper, LoadingIcon, BackLink, ButtonsWrapper, BackIcon } from './NewPlane.styles';
+import { Button, CanvasWrapper, Info, Wrapper, LoadingIcon, BackLink, ButtonsWrapper } from './NewPlane.styles';
 import { uploadBytesResumable, ref, getDownloadURL } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { addDoc, Timestamp, collection } from 'firebase/firestore';
@@ -11,6 +11,7 @@ import useMeasure from 'react-use-measure';
 import { db, storage } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import Illustration from 'components/Illustration';
+import { TbArrowBackUp } from 'react-icons/tb';
 
 const NewPlane = () => {
     let image = uuidv4();
@@ -21,6 +22,10 @@ const NewPlane = () => {
     const navigate = useNavigate();
 
     const imagesRef = ref(storage, `images/${image}`);
+
+    useEffect(() => {
+        console.log(infoScreen);
+    }, [infoScreen]);
 
     useEffect(() => {
         if (infoScreen) {
@@ -58,7 +63,7 @@ const NewPlane = () => {
         }
     };
 
-    const saveCanvasToStorage = () => {
+    const saveCanvas = () => {
         const dataURL = konvaRef.current.toDataURL({
             pixelRatio: 1,
         });
@@ -119,9 +124,9 @@ const NewPlane = () => {
             </div>
             <ButtonsWrapper>
                 <BackLink to="/">
-                    <BackIcon />
+                    <TbArrowBackUp />
                 </BackLink>
-                <Button onClick={saveCanvasToStorage}>{busy ? <LoadingIcon /> : 'Throw your plane'}</Button>
+                <Button onClick={saveCanvas}>{busy ? <LoadingIcon /> : 'Throw your plane'}</Button>
             </ButtonsWrapper>
         </Wrapper>
     );
