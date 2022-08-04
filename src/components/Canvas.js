@@ -6,7 +6,7 @@ import Stamp from 'components/Stamp';
 import axios from 'axios';
 import Loader from './Loader/Loader';
 
-const Canvas = ({ width, height, variant, plane }) => {
+const Canvas = ({ width, height, variant, plane, setIsDirty }) => {
     const api = 'https://api.geoapify.com/v1/ipinfo?&apiKey=cba9d4cd0da94613b2b4f45e939cde4a';
     const [loading, setLoading] = useState(true);
     const { konvaRef, PrevCanvas } = useCtx();
@@ -29,6 +29,7 @@ const Canvas = ({ width, height, variant, plane }) => {
     const handleClick = () => {
         sound.play();
         setStamp(<Stamp x={konvaRef.current.pointerPos.x} y={konvaRef.current.pointerPos.y} location={location} />);
+        setIsDirty(true);
     };
 
     return loading ? (

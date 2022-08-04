@@ -17,6 +17,7 @@ const FetchPlane = () => {
     const [plane, setPlane] = useState();
     const [loading, setLoading] = useState(true);
     const [busy, setBusy] = useState();
+    const [isDirty, setIsDirty] = useState(false);
     const { planesCount, konvaRef } = useCtx();
     const [measureRef, bounds] = useMeasure();
     const [infoScreen, setInfoScreen] = useState(false);
@@ -134,14 +135,14 @@ const FetchPlane = () => {
                 <div>
                     <Info>Click to place stamp</Info>
                     <CanvasWrapper ref={measureRef}>
-                        <Canvas width={bounds.width} height={bounds.height} plane={plane} variant="fetch" />
+                        <Canvas width={bounds.width} height={bounds.height} plane={plane} variant="fetch" setIsDirty={setIsDirty} />
                     </CanvasWrapper>
                 </div>
                 <ButtonsWrapper>
                     <BackLink to="/">
                         <TbArrowBackUp />
                     </BackLink>
-                    <Button onClick={savePlane}>{busy ? <LoadingIcon /> : 'Throw plane'}</Button>
+                    <Button onClick={() => (isDirty ? savePlane() : alert('Place stamp first 😉'))}>{busy ? <LoadingIcon /> : 'Throw plane'}</Button>
                 </ButtonsWrapper>
             </Wrapper>
         )

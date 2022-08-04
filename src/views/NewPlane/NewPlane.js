@@ -17,7 +17,8 @@ const NewPlane = () => {
     let image = uuidv4();
     const { visitedBefore, user, planesCount, konvaRef } = useCtx();
     const [newPlaneRef, newPlaneBounds] = useMeasure();
-    const [busy, setBusy] = useState();
+    const [isBusy, setIsBusy] = useState();
+    const [isDirty, setIsDirty] = useState(false);
     const [infoScreen, setInfoScreen] = useState(false);
     const navigate = useNavigate();
 
@@ -59,7 +60,7 @@ const NewPlane = () => {
                 setInfoScreen(true);
             });
         } catch (err) {
-            alert(err);
+            console.log(err);
         }
     };
 
@@ -86,9 +87,9 @@ const NewPlane = () => {
             (snapshot) => {
                 let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 if (progress < 100) {
-                    setBusy(true);
+                    setIsBusy(true);
                 } else {
-                    setBusy(false);
+                    setIsBusy(false);
                 }
             },
             (error) => {
@@ -119,14 +120,16 @@ const NewPlane = () => {
             <div>
                 <Info>Click to place stamp</Info>
                 <CanvasWrapper ref={newPlaneRef}>
-                    <Canvas width={newPlaneBounds.width} height={newPlaneBounds.height} variant="new" />
+                    <Canvas width={newPlaneBounds.width} height={newPlaneBounds.height} variant="new" setIsDirty={setIsDirty} />
                 </CanvasWrapper>
             </div>
             <ButtonsWrapper>
                 <BackLink to="/">
                     <TbArrowBackUp />
                 </BackLink>
-                <Button onClick={saveCanvas}>{busy ? <LoadingIcon /> : 'Throw your plane'}</Button>
+                <Button onClick={() => (isDirty ? saveCanvas() : alert('Place stamp first 😉'))}>
+                    {isBusy ? <LoadingIcon /> : 'Throw your plane'}
+                </Button>
             </ButtonsWrapper>
         </Wrapper>
     );
