@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Title } from 'components/Title';
 import { useCtx } from 'context/Context';
 import { motion } from 'framer-motion';
@@ -10,7 +10,6 @@ import Canvas from 'components/Canvas';
 import useMeasure from 'react-use-measure';
 import { db, storage } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
-import Illustration from 'components/Illustration';
 import { TbArrowBackUp } from 'react-icons/tb';
 
 const NewPlane = () => {
@@ -19,23 +18,9 @@ const NewPlane = () => {
     const [newPlaneRef, newPlaneBounds] = useMeasure();
     const [isBusy, setIsBusy] = useState();
     const [isDirty, setIsDirty] = useState(false);
-    const [infoScreen, setInfoScreen] = useState(false);
     const navigate = useNavigate();
 
     const imagesRef = ref(storage, `images/${image}`);
-
-    useEffect(() => {
-        console.log(infoScreen);
-    }, [infoScreen]);
-
-    useEffect(() => {
-        if (infoScreen) {
-            setTimeout(() => {
-                navigate('/');
-                setInfoScreen(false);
-            }, 3000);
-        }
-    }, [infoScreen, navigate]);
 
     const creationDate = () => {
         const dt = new Date();
@@ -57,11 +42,12 @@ const NewPlane = () => {
                 number: planesCount + 1,
                 name: image,
             }).then(() => {
-                setInfoScreen(true);
+                navigate(`/planes-count-info`, { state: 'new-plane' });
             });
         } catch (err) {
             console.log(err);
         }
+        navigate(`/planes-count-info`, { state: 'new-plane' });
     };
 
     const saveCanvas = () => {
@@ -103,18 +89,7 @@ const NewPlane = () => {
         );
     };
 
-    return infoScreen ? (
-        <>
-            <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <Title center>
-                    {`Your plane is now flying around the world ${
-                        planesCount - 1 > 1 ? `with ${planesCount - 1} others` : planesCount - 1 === 1 ? `with ${planesCount - 1} other` : ''
-                    }`}
-                </Title>
-            </Wrapper>
-            <Illustration variant="bottom" />
-        </>
-    ) : (
+    return (
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <Title center>{visitedBefore ? `Send plane` : `Send your first \n paper plane`}</Title>
             <div>

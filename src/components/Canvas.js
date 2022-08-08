@@ -32,7 +32,7 @@ const Canvas = ({ width, height, variant, plane, setIsDirty }) => {
         setIsDirty(true);
     };
 
-    return loading ? (
+    return loading && !location ? (
         <Loader />
     ) : (
         <Stage

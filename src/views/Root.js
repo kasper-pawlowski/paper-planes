@@ -13,13 +13,14 @@ import { AnimatePresence } from 'framer-motion';
 import { v4 as uuidv4 } from 'uuid';
 import FetchPlane from './FetchPlane/FetchPlane';
 import YourPlanes from './YourPlanes/YourPlanes';
-import { db } from '../firebase';
-import { collection, query, onSnapshot } from 'firebase/firestore';
 import { Routes, Route } from 'react-router-dom';
 import YourPlane from './YourPlane/YourPlane';
+import PlanesCountInfo from './PlanesCountInfo/PlanesCountInfo';
+import { collection, query, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Root = () => {
-    const { visitedBefore, setPlanesCount, user } = useCtx();
+    const { visitedBefore, user, setPlanesCount } = useCtx();
 
     const isTabletAndUp = useMediaQuery({
         query: '(min-width: 1224px)',
@@ -30,17 +31,16 @@ const Root = () => {
         !user && window.localStorage.setItem('user', uuidv4());
     }, [user, visitedBefore]);
 
-    useEffect(() => {
-        const q = query(collection(db, 'planes'));
-        const unsub = onSnapshot(q, (querySnapshot) => {
-            setPlanesCount(querySnapshot.size);
-        });
-    }, [setPlanesCount]);
-
     const lockScreen = async () => {
         await document.body.requestFullscreen();
         await window.screen.orientation.lock('portrait-primary');
     };
+
+    useEffect(() => {
+        onSnapshot(query(collection(db, 'planes')), (querySnapshot) => {
+            setPlanesCount(querySnapshot.size);
+        });
+    }, [setPlanesCount]);
 
     const AppRoutes = () => (
         <Routes>
@@ -50,6 +50,7 @@ const Root = () => {
             <Route path="/fetch-plane" element={<FetchPlane />} />
             <Route path="/your-planes" element={<YourPlanes />} />
             <Route path="/your-planes/:id" element={<YourPlane />} />
+            <Route path="/planes-count-info" element={<PlanesCountInfo />} />
         </Routes>
     );
 

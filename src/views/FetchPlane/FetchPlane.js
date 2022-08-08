@@ -10,7 +10,6 @@ import Canvas from 'components/Canvas';
 import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import Loader from 'components/Loader/Loader';
 import { useNavigate } from 'react-router-dom';
-import Illustration from 'components/Illustration';
 import { TbArrowBackUp } from 'react-icons/tb';
 
 const FetchPlane = () => {
@@ -20,21 +19,7 @@ const FetchPlane = () => {
     const [isDirty, setIsDirty] = useState(false);
     const { planesCount, konvaRef } = useCtx();
     const [measureRef, bounds] = useMeasure();
-    const [infoScreen, setInfoScreen] = useState(false);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        console.log(infoScreen);
-    }, [infoScreen]);
-
-    useEffect(() => {
-        if (infoScreen) {
-            setTimeout(() => {
-                navigate('/');
-                setInfoScreen(false);
-            }, 3000);
-        }
-    }, [infoScreen, navigate]);
 
     let imageRef;
     if (plane?.name) {
@@ -72,7 +57,7 @@ const FetchPlane = () => {
                 canvas: url,
                 fetchCount: plane?.fetchCount + 1,
             }).then(() => {
-                setInfoScreen(true);
+                navigate(`/planes-count-info`, { state: 'fetch-plane' });
             });
         } catch (err) {
             alert(err);
@@ -118,41 +103,28 @@ const FetchPlane = () => {
     return loading ? (
         <Loader />
     ) : plane ? (
-        infoScreen ? (
-            <>
-                <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <Title center>
-                        {`The plane is back flying around the world ${
-                            planesCount - 1 > 1 ? `with ${planesCount - 1} others` : planesCount - 1 === 1 ? `with ${planesCount - 1} other` : ''
-                        }`}
-                    </Title>
-                </Wrapper>
-                <Illustration variant="bottom" />
-            </>
-        ) : (
-            <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <Title center>Send paper plane</Title>
-                <div>
-                    <Info>Click to place stamp</Info>
-                    <CanvasWrapper ref={measureRef}>
-                        <Canvas width={bounds.width} height={bounds.height} plane={plane} variant="fetch" setIsDirty={setIsDirty} />
-                    </CanvasWrapper>
-                </div>
-                <ButtonsWrapper>
-                    <BackLink to="/">
-                        <TbArrowBackUp />
-                    </BackLink>
-                    <Button onClick={() => (isDirty ? savePlane() : alert('Place stamp first 😉'))}>{busy ? <LoadingIcon /> : 'Throw plane'}</Button>
-                </ButtonsWrapper>
-            </Wrapper>
-        )
+        <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <Title center>Send paper plane</Title>
+            <div>
+                <Info>Click to place stamp</Info>
+                <CanvasWrapper ref={measureRef}>
+                    <Canvas width={bounds.width} height={bounds.height} plane={plane} variant="fetch" setIsDirty={setIsDirty} />
+                </CanvasWrapper>
+            </div>
+            <ButtonsWrapper>
+                <BackLink to="/">
+                    <TbArrowBackUp />
+                </BackLink>
+                <Button onClick={() => (isDirty ? savePlane() : alert('Place stamp first 😉'))}>{busy ? <LoadingIcon /> : 'Throw plane'}</Button>
+            </ButtonsWrapper>
+        </Wrapper>
     ) : (
         <Wrapper as={motion.div} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <NoPlanes>
                 <p>
                     No plane is flying yet <br /> {':('}
                 </p>
-                <CreateNewPlaneButton to="new-plane">+ Create new plane</CreateNewPlaneButton>
+                <CreateNewPlaneButton to="/new-plane">+ Create new plane</CreateNewPlaneButton>
             </NoPlanes>
         </Wrapper>
     );
